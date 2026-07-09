@@ -66,8 +66,19 @@
             Search
 
         </button>
+        <button
+    id="locationBtn"
+    class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+
+    📍 My Location
+
+</button>
 
     </div>
+    <p id="errorMessage"
+   class="hidden text-red-500 text-center font-semibold mt-4">
+    ❌ City Not Found. Please enter a correct city name.
+</p>
 
 
     <!-- Current Weather -->
@@ -279,22 +290,9 @@
 
     </h2>
 
-
-    <div
-
-        id="fiveDayForecast"
-
-        class="grid
-
-               grid-cols-1
-
-               sm:grid-cols-2
-
-               lg:grid-cols-5
-
-               gap-5
-
-               mt-6">
+<div
+    id="fiveDayForecast"
+    class="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
 
 
         <div class="bg-slate-800 p-7 rounded-xl text-center">

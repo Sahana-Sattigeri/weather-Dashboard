@@ -2,6 +2,8 @@ const apiKey = "8a6e4a1ca74624f18f83d849da35d848";
 
 const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
+const locationBtn = document.getElementById("locationBtn");
+const errorMessage = document.getElementById("errorMessage");
 
 const cityName = document.getElementById("cityName");
 const temperature = document.getElementById("temperature");
@@ -28,11 +30,11 @@ async function getWeather(city) {
 
         if (data.cod != 200) {
 
-            alert("City Not Found");
+    errorMessage.classList.remove("hidden");
 
-            return;
-
-        }
+    return;
+}
+        errorMessage.classList.add("hidden");
 
         cityName.textContent = data.name;
 
@@ -191,5 +193,45 @@ async function getHourlyForecast(city) {
         `;
 
     });
+
+}
+cityInput.addEventListener("keydown", function (event) {
+
+    if (event.key === "Enter") {
+
+        const city = cityInput.value.trim();
+
+        if (city === "") {
+            alert("Please enter a city name");
+            return;
+        }
+
+        getWeather(city);
+
+    }
+
+});
+locationBtn.addEventListener("click", function () {
+
+    navigator.geolocation.getCurrentPosition(function (position) {
+
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        getWeatherByLocation(latitude, longitude);
+
+    });
+
+});
+async function getWeatherByLocation(latitude, longitude) {
+
+    const url =
+        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+
+    const response = await fetch(url);
+
+    const data = await response.json();
+
+    getWeather(data.name);
 
 }
