@@ -1,78 +1,3 @@
-
-
-//    const apiKey = "81e4f037f67867a6775b194124f80620";
-
-// const cityInput = document.getElementById("cityInput");
-// const searchBtn = document.getElementById("searchBtn");
-
-// const cityName = document.getElementById("cityName");
-// const temperature = document.getElementById("temperature");
-// const weatherDescription = document.getElementById("weatherDescription");
-
-// const humidity = document.getElementById("humidity");
-// const wind = document.getElementById("wind");
-// const pressure = document.getElementById("pressure");
-// const visibility = document.getElementById("visibility");
-
-// async function getWeather(city) {
-
-//     const url =
-//         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-
-//     try {
-
-//         const response = await fetch(url);
-
-//         const data = await response.json();
-
-//         console.log(data);
-
-//         if (data.cod != 200) {
-
-//             alert("City Not Found");
-
-//             return;
-
-//         }
-
-//         cityName.textContent = data.name;
-
-//         temperature.textContent =
-//             Math.round(data.main.temp) + "°C";
-
-//         weatherDescription.textContent =
-//             data.weather[0].description;
-
-//         humidity.textContent =
-//             data.main.humidity + "%";
-
-//         wind.textContent =
-//             data.wind.speed + " km/h";
-
-//         pressure.textContent =
-//             data.main.pressure + " hPa";
-
-//         visibility.textContent =
-//             data.visibility / 1000 + " km";
-
-//     }
-
-//     catch (error) {
-
-//         console.log(error);
-
-//     }
-
-// }
-
-// searchBtn.addEventListener("click", function () {
-
-//     getWeather(cityInput.value);
-
-// });
-
-// getWeather("Bengaluru");
-
 const apiKey = "8a6e4a1ca74624f18f83d849da35d848";
 
 const cityInput = document.getElementById("cityInput");
@@ -127,6 +52,7 @@ async function getWeather(city) {
 
         visibility.textContent = data.visibility / 1000 + " km";
         getFiveDayForecast(city);
+        getHourlyForecast(city);
 
     }
 
@@ -203,6 +129,61 @@ async function getFiveDayForecast(city) {
 
                     ${day.weather[0].description}
 
+                </p>
+
+            </div>
+
+        `;
+
+    });
+
+}
+async function getHourlyForecast(city) {
+
+    const hourlyUrl =
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+
+    const response = await fetch(hourlyUrl);
+
+    const data = await response.json();
+
+    const hourlyContainer =
+        document.getElementById("hourlyForecast");
+
+    hourlyContainer.innerHTML = "";
+
+    const nextSixForecasts = data.list.slice(0, 6);
+
+    nextSixForecasts.forEach(function (hour) {
+
+        const time = new Date(hour.dt_txt);
+
+        const formattedTime = time.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit"
+        });
+
+        const iconCode = hour.weather[0].icon;
+
+        hourlyContainer.innerHTML += `
+
+            <div class="bg-slate-800 p-6 rounded-xl text-center">
+
+                <p class="font-semibold">
+                    ${formattedTime}
+                </p>
+
+                <img
+                    src="https://openweathermap.org/img/wn/${iconCode}@2x.png"
+                    class="w-20 mx-auto"
+                    alt="Weather icon">
+
+                <p class="text-xl font-bold">
+                    ${Math.round(hour.main.temp)}°C
+                </p>
+
+                <p class="text-gray-400 capitalize mt-2">
+                    ${hour.weather[0].description}
                 </p>
 
             </div>
